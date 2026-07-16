@@ -1,0 +1,1752 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#05070d">
+  <meta name="color-scheme" content="dark">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="Empedernido: una película de sentimientos contada en dieciocho canciones.">
+  <title>Empedernido — Una película de sentimientos</title>
+  <style>
+  :root {
+    color-scheme: dark;
+    --bg: #05070d;
+    --bg-deep: #020307;
+    --surface: rgba(10, 14, 24, .72);
+    --text: #f4efe8;
+    --text-soft: #d6cfc7;
+    --muted: #a9a7aa;
+    --dim: #757984;
+    --line: rgba(236, 223, 205, .17);
+    --line-strong: rgba(236, 223, 205, .34);
+    --gold: #e4b767;
+    --gold-light: #f2d39a;
+    --moon: #a9c3e8;
+    --rose: #c98691;
+    --ember: #d37b45;
+    --ease: cubic-bezier(.22, 1, .36, 1);
+    --max: 1440px;
+    --gutter: clamp(22px, 5vw, 82px);
+    --scroll-progress: 0;
+    --scene-progress: 0;
+    --parallax: 0px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; background: var(--bg); }
+  body {
+    margin: 0;
+    min-width: 320px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  body.menu-open { overflow: hidden; }
+  a { color: inherit; }
+  button, a { -webkit-tap-highlight-color: transparent; }
+  button { font: inherit; }
+  img, iframe { max-width: 100%; }
+  ::selection { background: rgba(228, 183, 103, .34); color: #fff; }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .skip-link {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 200;
+    padding: 10px 14px;
+    background: var(--text);
+    color: var(--bg);
+    transform: translateY(-150%);
+    transition: transform .2s ease;
+  }
+  .skip-link:focus { transform: translateY(0); }
+
+  .ambient {
+    position: fixed;
+    inset: 0;
+    z-index: -5;
+    overflow: hidden;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 50% 130%, rgba(184, 103, 68, .08), transparent 45%),
+      linear-gradient(180deg, #05070d, #080b13 50%, #04060b);
+  }
+
+  .ambient__stars {
+    position: absolute;
+    inset: -12%;
+    opacity: .36;
+    transform: translate3d(0, var(--parallax), 0) scale(1.08);
+    transition: opacity 1.4s ease;
+    background-image:
+      radial-gradient(circle at 8% 14%, rgba(255,255,255,.9) 0 1px, transparent 1.4px),
+      radial-gradient(circle at 21% 62%, rgba(255,255,255,.54) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 38% 28%, rgba(169,195,232,.7) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 54% 82%, rgba(255,255,255,.48) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 73% 19%, rgba(228,183,103,.66) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 89% 71%, rgba(255,255,255,.62) 0 1px, transparent 1.5px);
+    background-size: 310px 310px, 430px 430px, 520px 520px, 650px 650px, 760px 760px, 890px 890px;
+  }
+  .ambient__stars--near {
+    opacity: .22;
+    filter: blur(.1px);
+    transform: translate3d(0, calc(var(--parallax) * -1.6), 0) scale(1.16);
+    background-size: 220px 220px, 360px 360px, 470px 470px, 590px 590px, 720px 720px, 820px 820px;
+  }
+
+  .ambient__moon,
+  .ambient__sun,
+  .ambient__orbits,
+  .ambient__horizon {
+    position: absolute;
+    transition: opacity 1.2s ease, transform 1.6s var(--ease), filter 1.2s ease;
+  }
+  .ambient__moon {
+    width: min(42vw, 600px);
+    aspect-ratio: 1;
+    left: -15vw;
+    top: 12vh;
+    border-radius: 50%;
+    opacity: .14;
+    background: radial-gradient(circle at 68% 42%, rgba(196,216,244,.48), rgba(83,102,139,.12) 38%, transparent 70%);
+    filter: blur(10px);
+  }
+  .ambient__sun {
+    width: min(34vw, 500px);
+    aspect-ratio: 1;
+    right: -12vw;
+    top: 28vh;
+    border-radius: 50%;
+    opacity: .1;
+    background: radial-gradient(circle, rgba(255,233,198,.7) 0 2%, rgba(214,129,76,.2) 20%, transparent 68%);
+    filter: blur(12px);
+  }
+  .ambient__orbits {
+    width: 62vw;
+    aspect-ratio: 1;
+    right: -30vw;
+    top: 4vh;
+    border: 1px solid rgba(228,183,103,.08);
+    border-radius: 50%;
+    opacity: .4;
+    transform: rotate(calc(var(--scroll-progress) * 35deg));
+  }
+  .ambient__orbits::before,
+  .ambient__orbits::after {
+    content: "";
+    position: absolute;
+    border: 1px solid rgba(169,195,232,.08);
+    border-radius: inherit;
+  }
+  .ambient__orbits::before { inset: 13%; }
+  .ambient__orbits::after { inset: 29%; }
+  .ambient__horizon {
+    inset: auto -10% -18vh;
+    height: 44vh;
+    opacity: .08;
+    background: radial-gradient(ellipse at 50% 100%, rgba(223,128,79,.72), rgba(201,116,126,.18) 35%, transparent 66%);
+    filter: blur(30px);
+  }
+  .ambient__grain {
+    position: absolute;
+    inset: -40%;
+    opacity: .025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitchTiles'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grain 1.4s steps(2) infinite;
+  }
+
+  body[data-theme="dawn"] .ambient__moon { opacity: .08; transform: translateX(8vw); }
+  body[data-theme="dawn"] .ambient__sun { opacity: .32; transform: translateX(-8vw); }
+  body[data-theme="dawn"] .ambient__horizon { opacity: .32; transform: translateY(-8vh); }
+  body[data-theme="still"] .ambient__stars { opacity: .16; }
+  body[data-theme="still"] .ambient__moon { opacity: .08; }
+  body[data-theme="still"] .ambient__sun { opacity: .04; }
+  body[data-theme="still"] .ambient__horizon { opacity: .12; }
+  body[data-theme="sunrise"] .ambient__moon { opacity: .12; transform: translateX(15vw) translateY(12vh); }
+  body[data-theme="sunrise"] .ambient__sun { opacity: .46; transform: translateX(-18vw) translateY(10vh); }
+  body[data-theme="sunrise"] .ambient__horizon { opacity: .5; transform: translateY(-14vh); }
+  body[data-theme="home"] .ambient__moon { opacity: .18; transform: translateX(25vw) translateY(20vh); }
+  body[data-theme="home"] .ambient__sun { opacity: .3; transform: translateX(-28vw) translateY(18vh); }
+  body[data-theme="home"] .ambient__orbits { opacity: .8; transform: translateX(-23vw) rotate(calc(var(--scroll-progress) * 48deg)); }
+  body[data-theme="home"] .ambient__horizon { opacity: .38; transform: translateY(-12vh); }
+  body[data-theme="coda"] .ambient__moon,
+  body[data-theme="coda"] .ambient__sun,
+  body[data-theme="coda"] .ambient__horizon { opacity: .03; filter: blur(40px); }
+  body[data-theme="coda"] .ambient__stars { opacity: .12; }
+
+  .progress {
+    position: fixed;
+    inset: 0 0 auto;
+    height: 2px;
+    z-index: 120;
+    background: rgba(255,255,255,.04);
+  }
+  .progress span {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--moon), var(--gold), var(--rose), var(--ember));
+    box-shadow: 0 0 12px rgba(228,183,103,.45);
+  }
+
+  .topbar {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 100;
+    border-bottom: 1px solid rgba(236,223,205,.09);
+    background: linear-gradient(180deg, rgba(3,5,10,.94), rgba(3,5,10,.7));
+    backdrop-filter: blur(18px);
+    transition: transform .5s var(--ease), background .3s ease;
+  }
+  .topbar__inner {
+    width: min(var(--max), calc(100% - 36px));
+    min-height: 70px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: .9rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .brand__moon {
+    width: 15px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    box-shadow: inset 4px 0 0 var(--gold);
+    transform: rotate(-12deg);
+  }
+  .nav { display: flex; align-items: center; gap: 4px; }
+  .nav a {
+    position: relative;
+    padding: 8px 10px;
+    color: #b8b3af;
+    text-decoration: none;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: .8rem;
+    white-space: nowrap;
+    transition: color .2s ease;
+  }
+  .nav a::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 1px;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform .25s var(--ease);
+  }
+  .nav a:hover,
+  .nav a:focus-visible,
+  .nav a.is-active { color: var(--text); outline: none; }
+  .nav a.is-active::after,
+  .nav a:focus-visible::after { transform: scaleX(1); }
+  .menu-toggle { display: none; }
+
+  main { position: relative; }
+  .hero {
+    min-height: 100svh;
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    padding: 104px var(--gutter) 94px;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 26%;
+    background: linear-gradient(transparent, rgba(4,6,11,.82));
+    pointer-events: none;
+  }
+  .hero__celestial { position: absolute; inset: 0; pointer-events: none; }
+  .hero__crescent {
+    position: absolute;
+    width: min(38vw, 520px);
+    aspect-ratio: 1;
+    left: -4vw;
+    top: 17%;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 68% 48%, rgba(226,238,253,.92), rgba(139,164,202,.58) 28%, rgba(65,79,110,.25) 50%, transparent 70%);
+    filter: drop-shadow(0 0 34px rgba(134,164,208,.18));
+    opacity: .86;
+    -webkit-mask: radial-gradient(circle at 57% 46%, transparent 0 55%, #000 56%);
+    mask: radial-gradient(circle at 57% 46%, transparent 0 55%, #000 56%);
+    transform: translate3d(0, calc(var(--parallax) * .8), 0);
+  }
+  .hero__solar-system {
+    position: absolute;
+    width: min(44vw, 650px);
+    aspect-ratio: 1;
+    right: -4vw;
+    top: 12%;
+    border-radius: 50%;
+    transform: translate3d(0, calc(var(--parallax) * -1), 0) rotate(calc(var(--scroll-progress) * 16deg));
+  }
+  .hero__solar-core {
+    position: absolute;
+    width: 18px;
+    aspect-ratio: 1;
+    left: 54%;
+    top: 48%;
+    border-radius: 50%;
+    background: #fff7de;
+    box-shadow: 0 0 22px 8px rgba(255,210,133,.65), 0 0 110px 38px rgba(211,123,69,.22);
+  }
+  .hero__orbit {
+    position: absolute;
+    border: 1px solid rgba(228,183,103,.22);
+    border-radius: 50%;
+  }
+  .hero__orbit--one { inset: 34%; }
+  .hero__orbit--two { inset: 19%; }
+  .hero__orbit--three { inset: 4%; }
+  .hero__content {
+    position: relative;
+    z-index: 2;
+    width: min(980px, 100%);
+    text-align: center;
+  }
+  .hero__prelude,
+  .act__label,
+  .prologue__label > p,
+  .epilogue__heading > p {
+    margin: 0 0 16px;
+    color: var(--gold);
+    font-size: .72rem;
+    font-weight: 720;
+    letter-spacing: .34em;
+    text-transform: uppercase;
+  }
+  h1 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(4.3rem, 10.8vw, 10rem);
+    font-weight: 400;
+    line-height: .88;
+    letter-spacing: -.06em;
+    text-shadow: 0 8px 45px rgba(0,0,0,.65);
+  }
+  .hero__subtitle {
+    max-width: 720px;
+    margin: 30px auto 0;
+    color: #c3c2c4;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.08rem, 2vw, 1.5rem);
+    line-height: 1.5;
+  }
+  .hero__actions,
+  .epilogue__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 28px;
+    margin-top: 38px;
+  }
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    min-height: 50px;
+    padding: 0 24px;
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    color: var(--text);
+    background: transparent;
+    text-decoration: none;
+    font-size: .88rem;
+    font-weight: 680;
+    cursor: pointer;
+    transition: transform .25s var(--ease), background .25s ease, border-color .25s ease, color .25s ease;
+  }
+  .button:hover,
+  .button:focus-visible { transform: translateY(-2px); outline: none; border-color: var(--gold); }
+  .button--primary {
+    color: #15110b;
+    border-color: transparent;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    box-shadow: 0 12px 45px rgba(208,142,62,.18);
+  }
+  .button--primary:hover,
+  .button--primary:focus-visible { background: #f3d8a8; }
+  .quiet-link {
+    position: relative;
+    padding: 8px 0;
+    color: #d3cec8;
+    text-decoration: none;
+    font-size: .86rem;
+    cursor: pointer;
+  }
+  .quiet-link::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 1px;
+    height: 1px;
+    background: var(--gold);
+    transform-origin: left;
+    transform: scaleX(.45);
+    transition: transform .3s var(--ease);
+  }
+  .quiet-link:hover::after,
+  .quiet-link:focus-visible::after { transform: scaleX(1); }
+  .quiet-link:focus-visible { outline: none; color: #fff; }
+  .scroll-cue {
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    bottom: 28px;
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    color: var(--dim);
+    font-size: .68rem;
+    text-decoration: none;
+    transform: translateX(-50%);
+    animation: cue 2.8s ease-in-out infinite;
+  }
+
+  .prologue {
+    position: relative;
+    width: min(1200px, calc(100% - 2 * var(--gutter)));
+    margin: auto;
+    padding: 150px 0 180px;
+    display: grid;
+    grid-template-columns: minmax(260px, .8fr) minmax(0, 1.3fr);
+    gap: clamp(48px, 8vw, 120px);
+  }
+  .prologue::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent 65%);
+    opacity: .42;
+  }
+  .prologue__label { position: sticky; top: 118px; align-self: start; }
+  .prologue h2,
+  .epilogue h2,
+  .act__heading h2 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 400;
+    line-height: 1;
+    text-wrap: balance;
+  }
+  .prologue h2 { font-size: clamp(2.7rem, 5vw, 5rem); }
+  .prologue blockquote {
+    margin: 0;
+    padding: 0 0 0 32px;
+    border-left: 1px solid rgba(228,183,103,.58);
+    color: #e7e1d9;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.16rem, 2.1vw, 1.5rem);
+    line-height: 1.78;
+  }
+  .prologue blockquote p { margin: 0 0 1.3em; }
+  .prologue__copy { margin-top: 52px; max-width: 720px; color: var(--muted); font-size: 1rem; }
+  .prologue__copy p { margin: 0 0 1.2em; }
+  .prologue__copy p:last-child { color: var(--text); font-family: Georgia, "Times New Roman", serif; font-size: 1.16rem; }
+
+  .act {
+    position: relative;
+    padding: 130px var(--gutter) 100px;
+  }
+  .act--still { padding-bottom: 150px; }
+  .act--coda { background: linear-gradient(180deg, rgba(2,3,6,.2), rgba(0,0,0,.72)); }
+  .act__heading {
+    width: min(var(--max), 100%);
+    margin: 0 auto 72px;
+    display: grid;
+    grid-template-columns: minmax(150px, .34fr) 1fr;
+    align-items: end;
+    gap: 30px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+  }
+  .act__heading h2 { font-size: clamp(2.8rem, 6vw, 6.2rem); }
+  .act--coda .act__heading h2 { color: rgba(244,239,232,.52); }
+  .act__scenes { width: min(var(--max), 100%); margin: auto; }
+
+  .runtime-error {
+    width: min(760px, calc(100% - 40px));
+    margin: 80px auto;
+    padding: 30px;
+    border: 1px solid rgba(228,183,103,.35);
+    color: var(--text);
+    background: rgba(12,14,20,.92);
+    font-family: Georgia, "Times New Roman", serif;
+    line-height: 1.65;
+  }
+  .runtime-error p { margin: 0 0 .65em; }
+
+  .scene {
+    position: relative;
+    min-height: max(880px, 116svh);
+    padding: 11vh 0 16vh;
+    scroll-margin-top: 80px;
+  }
+  .scene + .scene { border-top: 1px solid rgba(236,223,205,.07); }
+  .scene__inner {
+    position: sticky;
+    top: 92px;
+    min-height: calc(100svh - 120px);
+    display: grid;
+    grid-template-columns: 92px minmax(300px, .63fr) minmax(460px, 1.37fr);
+    align-items: center;
+    gap: clamp(24px, 4vw, 64px);
+  }
+  .scene__rail {
+    height: min(74vh, 620px);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--dim);
+    font-family: Georgia, "Times New Roman", serif;
+  }
+  .scene__rail::before {
+    content: "";
+    position: absolute;
+    top: 42px;
+    bottom: 42px;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(var(--gold), rgba(255,255,255,.1));
+  }
+  .scene__rail-current,
+  .scene__rail-total {
+    position: relative;
+    z-index: 1;
+    min-width: 46px;
+    padding: 8px 4px;
+    background: var(--bg);
+    text-align: center;
+    font-size: .84rem;
+    letter-spacing: .1em;
+  }
+  .scene__rail-dot {
+    position: relative;
+    z-index: 1;
+    width: 12px;
+    aspect-ratio: 1;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: 0 0 0 10px rgba(228,183,103,.06);
+    transform: translateY(calc((var(--scene-progress) - .5) * 180px));
+  }
+  .scene__copy {
+    position: relative;
+    z-index: 2;
+    padding-block: 30px;
+    opacity: calc(.45 + var(--scene-progress) * .9);
+    transform: translateY(calc((.5 - var(--scene-progress)) * 34px));
+  }
+  .scene__kicker {
+    margin: 0 0 14px;
+    color: var(--rose);
+    font-size: .68rem;
+    font-weight: 760;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+  }
+  .scene h3 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(2.7rem, 5.8vw, 6.4rem);
+    font-weight: 400;
+    line-height: .94;
+    letter-spacing: -.04em;
+    text-wrap: balance;
+  }
+  .scene__artist {
+    margin: 16px 0 0;
+    color: var(--gold);
+    font-size: .98rem;
+  }
+  .scene__rule {
+    width: min(320px, 80%);
+    height: 1px;
+    margin: 30px 0;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+  .scene__narration {
+    max-width: 550px;
+    color: #c9c5c1;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.02rem, 1.45vw, 1.22rem);
+    line-height: 1.76;
+  }
+  .scene__narration p { margin: 0 0 1.05em; }
+  .scene__actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 34px;
+  }
+  .scene__next {
+    border: 0;
+    padding: 10px 2px;
+    color: #c8c3bd;
+    background: transparent;
+    font-size: .8rem;
+    cursor: pointer;
+  }
+  .scene__next:hover,
+  .scene__next:focus-visible { color: var(--gold-light); outline: none; text-decoration: underline; text-underline-offset: 5px; }
+
+  .scene__media { position: relative; min-width: 0; }
+  .player {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid rgba(228,183,103,.35);
+    background: #020306;
+    box-shadow: 0 30px 110px rgba(0,0,0,.55), 0 0 70px rgba(106,139,184,.08);
+    isolation: isolate;
+  }
+  .player::before {
+    content: "";
+    position: absolute;
+    inset: -18%;
+    z-index: -2;
+    background:
+      radial-gradient(circle at 68% 28%, rgba(228,183,103,.24), transparent 42%),
+      radial-gradient(circle at 22% 74%, rgba(108,139,188,.25), transparent 45%),
+      linear-gradient(135deg, #0b111c, #06070c 58%, #16100c);
+    transform: translateY(calc((.5 - var(--scene-progress)) * 24px)) scale(1.05);
+  }
+  .player::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: linear-gradient(135deg, black, transparent 78%);
+  }
+  .player iframe { width: 100%; height: 100%; border: 0; display: block; background: #000; }
+  .player__poster {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 16px;
+    padding: 32px;
+    text-align: center;
+  }
+  .player__chapter {
+    color: var(--gold);
+    font-size: .66rem;
+    font-weight: 740;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+  }
+  .player__title {
+    max-width: 78%;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(2rem, 4vw, 4.2rem);
+    font-weight: 400;
+    line-height: 1;
+    text-wrap: balance;
+  }
+  .player__play {
+    display: grid;
+    place-items: center;
+    width: 76px;
+    aspect-ratio: 1;
+    margin-top: 10px;
+    border: 1px solid rgba(242,211,154,.75);
+    border-radius: 50%;
+    color: #171109;
+    background: rgba(228,183,103,.92);
+    cursor: pointer;
+    box-shadow: 0 0 0 14px rgba(228,183,103,.07), 0 16px 48px rgba(0,0,0,.3);
+    transition: transform .3s var(--ease), background .25s ease, box-shadow .25s ease;
+  }
+  .player__play:hover,
+  .player__play:focus-visible {
+    transform: scale(1.06);
+    background: var(--gold-light);
+    box-shadow: 0 0 0 20px rgba(228,183,103,.08), 0 16px 48px rgba(0,0,0,.3);
+    outline: none;
+  }
+  .player__play svg { width: 25px; height: 25px; margin-left: 4px; fill: currentColor; }
+  .player__hint { color: var(--muted); font-size: .72rem; }
+  .player__loading {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    background: #030408;
+    font-size: .8rem;
+  }
+  .player__loading::before {
+    content: "";
+    width: 34px;
+    aspect-ratio: 1;
+    border: 2px solid rgba(255,255,255,.12);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+  .player__fallback {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-top: 14px;
+    color: var(--dim);
+    font-size: .7rem;
+  }
+  .player__fallback a { color: #bfb8b0; text-underline-offset: 4px; }
+  .player__fallback a:hover { color: var(--text); }
+  .scene.is-playing .player { border-color: rgba(228,183,103,.65); box-shadow: 0 30px 110px rgba(0,0,0,.58), 0 0 90px rgba(228,183,103,.12); }
+
+  /* Mantiene completa la composición editorial en portátiles de poca altura. */
+  @media (min-width: 1000px) and (max-height: 800px) {
+    .scene__inner { top: 72px; min-height: calc(100svh - 82px); }
+    .scene__rail { height: min(67vh, 510px); }
+    .scene__copy { padding-block: 8px; }
+    .scene h3 { font-size: clamp(2.7rem, 4.7vw, 4.8rem); }
+    .scene__artist { margin-top: 10px; }
+    .scene__rule { margin-block: 20px; }
+    .scene__narration { font-size: clamp(.94rem, 1.25vw, 1.06rem); line-height: 1.58; }
+    .scene__narration p { margin-bottom: .75em; }
+    .scene__actions { margin-top: 20px; }
+  }
+
+  .epilogue {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    grid-template-columns: minmax(260px, .75fr) minmax(0, 1.25fr);
+    align-items: center;
+    gap: clamp(50px, 9vw, 150px);
+    padding: 170px var(--gutter) 150px;
+    border-top: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(2,3,7,.65), rgba(14,8,10,.56));
+    overflow: hidden;
+  }
+  .epilogue__orbits {
+    position: absolute;
+    width: min(64vw, 850px);
+    aspect-ratio: 1;
+    left: -22vw;
+    bottom: -42%;
+    border: 1px solid rgba(228,183,103,.18);
+    border-radius: 50%;
+  }
+  .epilogue__orbits::before {
+    content: "";
+    position: absolute;
+    inset: 22%;
+    border: 1px solid rgba(169,195,232,.18);
+    border-radius: inherit;
+  }
+  .epilogue__heading,
+  .epilogue__copy,
+  .epilogue__actions { position: relative; z-index: 1; }
+  .epilogue h2 { font-size: clamp(3.8rem, 8vw, 8.6rem); color: var(--gold); }
+  .epilogue__copy {
+    max-width: 800px;
+    color: var(--muted);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.04rem, 1.5vw, 1.25rem);
+    line-height: 1.75;
+  }
+  .epilogue__copy p { margin: 0 0 1.18em; }
+  .epilogue__line { color: var(--text); font-size: 1.24em; line-height: 1.42; }
+  .epilogue__actions { grid-column: 2; justify-content: flex-start; margin-top: 0; }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 32px var(--gutter) 48px;
+    border-top: 1px solid var(--line);
+    color: var(--dim);
+    font-size: .72rem;
+  }
+  footer p { margin: 0; }
+
+  .chapter-status {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    z-index: 70;
+    display: flex;
+    gap: 5px;
+    color: rgba(244,239,232,.55);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: .74rem;
+    letter-spacing: .08em;
+    opacity: 0;
+    transition: opacity .25s ease;
+  }
+  .chapter-status.is-visible { opacity: 1; }
+  .chapter-status span:first-child { color: var(--gold); }
+  .back-to-top {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 70;
+    width: 44px;
+    aspect-ratio: 1;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    color: var(--text);
+    background: rgba(5,7,13,.76);
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity .25s ease, transform .3s var(--ease), border-color .2s ease;
+  }
+  .back-to-top.is-visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .back-to-top:hover,
+  .back-to-top:focus-visible { border-color: var(--gold); outline: none; }
+
+  [data-reveal], .scene__inner {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  html.reveal-ready [data-reveal],
+  html.reveal-ready .scene__inner {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .9s var(--ease), transform 1s var(--ease);
+  }
+  html.reveal-ready [data-reveal].is-visible,
+  html.reveal-ready .scene.is-visible .scene__inner { opacity: 1; transform: translateY(0); }
+
+  @keyframes grain {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(2%, -1%); }
+    50% { transform: translate(-1%, 2%); }
+    75% { transform: translate(1%, 1%); }
+    100% { transform: translate(0, 0); }
+  }
+  @keyframes cue { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(7px); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 1100px) {
+    .nav a { padding-inline: 7px; font-size: .74rem; }
+    .scene__inner { grid-template-columns: 60px minmax(250px, .7fr) minmax(400px, 1.3fr); gap: 26px; }
+    .scene__rail { height: 58vh; }
+    .hero__crescent { left: -14vw; }
+    .hero__solar-system { right: -14vw; }
+  }
+
+  @media (max-width: 880px) {
+    .topbar__inner { min-height: 64px; }
+    .menu-toggle {
+      display: grid;
+      gap: 6px;
+      width: 44px;
+      height: 44px;
+      place-content: center;
+      border: 0;
+      color: var(--text);
+      background: transparent;
+      cursor: pointer;
+    }
+    .menu-toggle span:not(.sr-only) { display: block; width: 22px; height: 1px; background: currentColor; transition: transform .3s var(--ease); }
+    .menu-toggle[aria-expanded="true"] span:first-child { transform: translateY(3.5px) rotate(45deg); }
+    .menu-toggle[aria-expanded="true"] span:nth-child(2) { transform: translateY(-3.5px) rotate(-45deg); }
+    .nav {
+      position: fixed;
+      inset: 64px 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(4,6,11,.97);
+      backdrop-filter: blur(18px);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-12px);
+      transition: opacity .25s ease, transform .3s var(--ease);
+    }
+    .nav.is-open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    .nav a { padding: 12px; border-bottom: 1px solid rgba(255,255,255,.05); font-size: .88rem; }
+    .prologue { grid-template-columns: 1fr; }
+    .prologue__label { position: static; }
+    .act__heading { grid-template-columns: 1fr; gap: 8px; }
+    .scene { min-height: auto; padding-block: 90px; }
+    .scene__inner {
+      position: relative;
+      top: auto;
+      min-height: 0;
+      grid-template-columns: 42px minmax(0, 1fr);
+      align-items: start;
+    }
+    .scene__rail { grid-row: 1 / span 2; height: 100%; min-height: 500px; }
+    .scene__copy { padding-top: 0; }
+    .scene__media { grid-column: 2; width: 100%; }
+    .scene h3 { font-size: clamp(2.8rem, 9vw, 5.3rem); }
+    .epilogue { grid-template-columns: 1fr; }
+    .epilogue__actions { grid-column: 1; }
+  }
+
+  @media (max-width: 600px) {
+    :root { --gutter: 18px; }
+    .brand { font-size: .78rem; letter-spacing: .13em; }
+    .hero { min-height: 100svh; padding-top: 92px; }
+    .hero__crescent { width: 88vw; left: -55vw; top: 18%; opacity: .64; }
+    .hero__solar-system { width: 100vw; right: -55vw; top: 21%; }
+    h1 { font-size: clamp(3.35rem, 16vw, 4.15rem); letter-spacing: -.05em; }
+    .hero__subtitle { font-size: 1.08rem; }
+    .hero__actions { flex-direction: column; gap: 16px; }
+    .hero__prelude { letter-spacing: .22em; line-height: 1.7; }
+    .scroll-cue { bottom: 20px; }
+    .prologue { width: calc(100% - 36px); padding-block: 110px; }
+    .prologue::before { top: 72px; }
+    .prologue blockquote { padding-left: 20px; }
+    .act { padding-block: 100px 70px; }
+    .act__heading { margin-bottom: 30px; }
+    .act__heading h2 { font-size: clamp(2.7rem, 14vw, 4.4rem); }
+    .scene { padding-block: 70px; }
+    .scene__inner { grid-template-columns: 1fr; gap: 28px; }
+    .scene__rail {
+      grid-row: auto;
+      height: auto;
+      min-height: 0;
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 8px;
+    }
+    .scene__rail::before { inset: 50% 46px auto; width: auto; height: 1px; }
+    .scene__rail-current,
+    .scene__rail-total { min-width: auto; padding: 0; background: transparent; }
+    .scene__rail-dot { width: 8px; transform: none; }
+    .scene__copy, .scene__media { grid-column: 1; }
+    .scene__copy { opacity: 1; transform: none; }
+    .scene h3 { font-size: clamp(2.6rem, 15vw, 4.2rem); }
+    .scene__actions { align-items: flex-start; flex-direction: column; }
+    .player__poster { padding: 18px; }
+    .player__title { max-width: 94%; font-size: clamp(1.55rem, 9vw, 2.8rem); }
+    .player__play { width: 58px; }
+    .player__fallback { align-items: flex-start; flex-direction: column; gap: 4px; }
+    .epilogue { padding-block: 120px 100px; }
+    .epilogue h2 { font-size: clamp(3.8rem, 19vw, 6.4rem); }
+    .epilogue__actions { align-items: flex-start; flex-direction: column; }
+    footer { flex-direction: column; }
+    .chapter-status { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: .01ms !important;
+    }
+    .ambient__stars,
+    .hero__crescent,
+    .hero__solar-system,
+    .scene__copy { transform: none !important; }
+    [data-reveal], .scene__inner { opacity: 1; transform: none; }
+  }
+</style>
+
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient__stars ambient__stars--far"></div>
+    <div class="ambient__stars ambient__stars--near"></div>
+    <div class="ambient__moon"></div>
+    <div class="ambient__sun"></div>
+    <div class="ambient__orbits"></div>
+    <div class="ambient__horizon"></div>
+    <div class="ambient__grain"></div>
+  </div>
+
+  <div class="progress" aria-hidden="true">
+    <span id="progressBar"></span>
+  </div>
+
+  <header class="topbar" id="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="#inicio" aria-label="Empedernido, volver al inicio">
+        <span class="brand__moon" aria-hidden="true"></span>
+        <span>Empedernido</span>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" type="button"
+              aria-expanded="false" aria-controls="primaryNav">
+        <span></span><span></span>
+        <span class="sr-only">Abrir navegación</span>
+      </button>
+
+      <nav class="nav" id="primaryNav" aria-label="Navegación por actos">
+        <a href="#prologo">Prólogo</a>
+        <a href="#acto-i">Acto I</a>
+        <a href="#acto-ii">Acto II</a>
+        <a href="#intermedio">Intermedio</a>
+        <a href="#acto-iii">Acto III</a>
+        <a href="#acto-iv">Acto IV</a>
+        <a href="#coda">Coda</a>
+        <a href="#epilogo">Epílogo</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="hero" id="inicio" data-theme="moon">
+      <div class="hero__celestial" aria-hidden="true">
+        <div class="hero__crescent"></div>
+        <div class="hero__solar-system">
+          <span class="hero__solar-core"></span>
+          <span class="hero__orbit hero__orbit--one"></span>
+          <span class="hero__orbit hero__orbit--two"></span>
+          <span class="hero__orbit hero__orbit--three"></span>
+        </div>
+      </div>
+
+      <div class="hero__content" data-reveal>
+        <p class="hero__prelude">Una obra en dieciocho movimientos</p>
+        <h1>Empedernido</h1>
+        <p class="hero__subtitle">Una película de sentimientos contada en dieciocho canciones.</p>
+        <div class="hero__actions">
+          <a class="button button--primary" href="#prologo">Comenzar la obra <span aria-hidden="true">→</span></a>
+          <a class="quiet-link" data-playlist-link target="_blank" rel="noopener noreferrer">Playlist completa ↗</a>
+        </div>
+      </div>
+
+      <a class="scroll-cue" href="#prologo">
+        <span>Desliza para continuar</span>
+        <span aria-hidden="true">↓</span>
+      </a>
+    </section>
+
+    <section class="prologue" id="prologo" data-theme="moon">
+      <div class="prologue__label" data-reveal>
+        <p>Prólogo</p>
+        <h2>Dos luces antes del encuentro</h2>
+      </div>
+      <div class="prologue__body">
+        <blockquote data-reveal>
+          <p>Enamorado de un «te amo» aún no dicho, de una sombra aún sin dueña. Un amor sin rostro, pero no por ello menos intenso… ni menos real.</p>
+          <p>Un tonto enamorado de la luna, con el frío del cuerpo clamando por su presencia, por su calor… por ella.</p>
+          <p>Una empedernida… una tonta enamorada del sol.</p>
+        </blockquote>
+        <div class="prologue__copy" data-reveal>
+          <p>Él ya conoció el amor, pero también lo que ocurre cuando se entrega tanto que deja de reconocerse. Aun así, se resiste a convertirse en alguien indiferente. Sigue deseando amar con toda su intensidad, aunque una parte de él tema que toda historia nueva esté destinada a terminar como la anterior.</p>
+          <p>En algún lugar, sin que él lo sepa, alguien más también espera.</p>
+        </div>
+      </div>
+    </section>
+
+    <div id="actsMount"></div>
+
+    <section class="epilogue" id="epilogo" data-theme="home">
+      <div class="epilogue__orbits" aria-hidden="true"></div>
+      <div class="epilogue__heading" data-reveal>
+        <p>Epílogo</p>
+        <h2>La sinfonía permanece</h2>
+      </div>
+      <div class="epilogue__copy" data-reveal>
+        <p>Él comenzó contemplando el amor desde afuera, convencido de que su intensidad podía ser al mismo tiempo su mayor virtud y su condena. Ella comenzó escribiéndole a una persona inexistente, sin saber cuándo aparecería.</p>
+        <p>Cuando se encontraron, ambos confundieron durante un instante la cercanía con la posibilidad de bastarse por completo. Fue necesario detenerse, recuperar sus propias voces y comprender que una relación no se sostiene mediante la desaparición de quienes la forman.</p>
+        <p class="epilogue__line">Al final, él no aprende a amar menos.</p>
+        <p class="epilogue__line">Aprende a no ofrecerse como sacrificio.</p>
+        <p class="epilogue__line">Ella no llega para salvarlo.</p>
+        <p class="epilogue__line">Llega para caminar junto a alguien que ha decidido permanecer también consigo mismo.</p>
+        <p>Y cuando sus voces finalmente pueden convivir sin confundirse, aquello que comenzó como una canción solitaria se transforma en una sinfonía.</p>
+      </div>
+      <div class="epilogue__actions" data-reveal>
+        <a class="quiet-link" data-playlist-link target="_blank" rel="noopener noreferrer">Ver playlist completa en YouTube ↗</a>
+        <a class="button button--outline" href="#inicio">Volver al comienzo</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Una obra en dieciocho movimientos. Reproducción voluntaria desde Google Drive.</p>
+    <p class="footer__note">Si un video no puede mostrarse en el visor, utiliza su enlace alternativo de Drive.</p>
+  </footer>
+
+  <div class="chapter-status" id="chapterStatus" aria-hidden="true">
+    <span id="chapterCurrent">01</span><span>/</span><span>18</span>
+  </div>
+
+  <button class="back-to-top" id="backToTop" type="button" aria-label="Volver arriba">↑</button>
+
+  <noscript>Esta obra necesita JavaScript para mostrar las escenas y los reproductores.</noscript>
+
+  <script type="application/json" id="serverBootstrap">{}</script>
+  <script>
+(() => {
+  'use strict';
+
+  const PLAYLIST_URL = 'https://youtube.com/playlist?list=PLC5TVNNNRXF8&si=3r5XwvZND_uyiIt-';
+
+  const FALLBACK_VIDEOS = [
+    { number: 1, fileId: '1i5u5f0Gxorso1WVVFdIHpS_aLd8Ksq-Q' },
+    { number: 2, fileId: '1PTO3KNLMV0VgmJWtUK56wm-B9XQSUi6S' },
+    { number: 3, fileId: '1UJPvXpqWlxuXtCllDpVgRVRXJBFYgBng' },
+    { number: 4, fileId: '1U7wRUTDYEoOcXpKBEpBH9puj-nMNGaNV' },
+    { number: 5, fileId: '168-eC0LnGb_JWMDacCUstIH-flP_hPOD' },
+    { number: 6, fileId: '1_rZhBsspa0QyagDgmqKA4Et1lPIhvtEm' },
+    { number: 7, fileId: '1DWAM2mTKt9nLJ19iOd8aErvgBwE5g_Vz' },
+    { number: 8, fileId: '12sAh2eJpnjSRAQ8BaYcJC8JzncbZeiOK' },
+    { number: 9, fileId: '1Uy7VnEB29U3P1kEUgnx23jq_wBuM6Ni_' },
+    { number: 10, fileId: '1EwcOVXTRG9ybJifE4lP0UbndTv4WalYH' },
+    { number: 11, fileId: '1An1jHGYUmlyEf6vlVGZJW7Zl146tctHi' },
+    { number: 12, fileId: '1tVJwYcqOpxxZBGwgl8ccPK-BM1mu31TR' },
+    { number: 13, fileId: '18dEnxP2wlI2dNys6mzr1bgeh8JSEqSQ4' },
+    { number: 14, fileId: '1eWvAq-_sWlwFeY4b8Y475WhhWCYjjv5q' },
+    { number: 15, fileId: '1A3b_a-8Kk1u-lAgjwzCAjqwMBRe8F_mo' },
+    { number: 16, fileId: '14hyNQevpZQvuns5GTtDpTpszmWOxRf0w' },
+    { number: 17, fileId: '1jQsXWCMCZlJXnJB11oLBu6Yr0SJc49-j' },
+    { number: 18, fileId: '1lGpSmKmvjdBWCxH46USQjD_VTkz1Vuz6' }
+  ];
+
+  const SCENES = [
+    {
+      number: 1,
+      title: 'People Watching',
+      artist: 'Conan Gray',
+      narration: [
+        'Hay quienes aprenden sobre el amor viviéndolo y quienes, durante un tiempo, solamente pueden contemplarlo desde afuera. Él observa a otras parejas e intenta imaginar cómo se siente pertenecer a ese pequeño mundo que construyen entre dos. Desea acercarse, pero todavía existe en él una distancia protectora: mirar es más seguro que volver a arriesgarse.'
+      ]
+    },
+    {
+      number: 2,
+      title: 'Dear Soulmate',
+      artist: 'Laufey',
+      narration: [
+        'En otro lugar, una mujer escribe para alguien a quien todavía no conoce. No sabe su nombre, su rostro ni cuánto falta para encontrarlo; solamente siente que hay palabras y afectos que algún día querrá entregarle. Mientras él contempla el amor desde lejos, ella también habla hacia el vacío, sin saber que quizá ya está respondiendo a su deseo.'
+      ]
+    },
+    {
+      number: 3,
+      title: 'The Most Beautiful Thing',
+      artist: 'Bruno Major',
+      narration: [
+        'Él se pregunta si la persona que busca realmente existe o si el mundo puede mantener separados para siempre a quienes habrían podido amarse. La esperanza empieza a mezclarse con el miedo: no solamente teme no encontrarla, sino encontrar algo hermoso y volver a perderlo. Todavía no sabe que, en alguna parte, alguien también está preguntándose por él.'
+      ]
+    },
+    {
+      number: 4,
+      title: 'Coisa Linda',
+      artist: 'TIAGO IORC',
+      narration: [
+        'Entonces aparece alguien.',
+        'No existe todavía una historia ni una promesa. Solamente una presencia que interrumpe sus pensamientos y lo obliga a permanecer en el presente. Por un instante, él deja de preguntarse cómo será el amor y se limita a contemplar a la mujer que tiene delante.'
+      ]
+    },
+    {
+      number: 5,
+      title: 'Trevo (Tu)',
+      artist: 'ANAVITÓRIA',
+      narration: [
+        'Ella también comienza a verlo.',
+        'Lo que para él fue una aparición, para ella empieza a sentirse como una coincidencia afortunada: alguien raro, pero cercano; extraordinario, pero capaz de volver hermosa la vida cotidiana. La posibilidad del amor deja de existir solamente en la imaginación de él. Por primera vez, parece haber una respuesta.'
+      ]
+    },
+    {
+      number: 6,
+      title: 'Moça',
+      artist: 'Mariana Froes',
+      narration: [
+        'Las miradas empiezan a convertirse en movimiento. Aparecen el baile, la cercanía, el deseo de quedarse un poco más y la pequeña tristeza que provoca cada despedida. El amor abandona el terreno de las ideas y entra en el cuerpo: ya no es solamente alguien a quien imaginar, sino alguien cuya presencia puede sentirse.'
+      ]
+    },
+    {
+      number: 7,
+      title: 'Bewitched',
+      artist: 'Laufey',
+      narration: [
+        'Ella descubre que tampoco permanece intacta.',
+        'Hay algo en él que altera su percepción, vuelve importantes los gestos más pequeños y la hace avanzar entre fascinación y desconcierto. Aquella mujer que escribía a un desconocido empieza a sospechar que tal vez el destinatario de sus palabras se encuentra ahora frente a ella.'
+      ]
+    },
+    {
+      number: 8,
+      title: 'All I Need',
+      artist: 'Jacob Collier, Mahalia y Ty Dolla $ign',
+      narration: [
+        'Las dos voces finalmente parecen habitar el mismo espacio. El encuentro se convierte en celebración, y durante unos minutos ambos sienten que nada fuera de ellos resulta necesario. Es la felicidad del enamoramiento en su forma más luminosa, pero también el comienzo de un peligro silencioso: confundir la unión con la desaparición de todo lo demás.'
+      ]
+    },
+    {
+      number: 9,
+      title: 'Note to Self',
+      artist: 'Ben Rector',
+      narration: [
+        'En medio de la euforia, él se queda a solas consigo mismo.',
+        'No quiere huir del amor ni negar lo que siente. Solamente necesita recordar que todavía posee un cuerpo, una vida, amigos, responsabilidades y una identidad que no deben desaparecer dentro de la relación. Amarla no exige volver a abandonarse.'
+      ]
+    },
+    {
+      number: 10,
+      title: 'Brand New',
+      artist: 'Ben Rector with Cody Fry and the National Symphony Orchestra',
+      narration: [
+        'Después del silencio interior, el mundo vuelve a abrirse.',
+        'Él no renace porque otra persona lo haya completado, sino porque ha recuperado el lugar que ocupa dentro de su propia vida. La orquesta transforma ese descubrimiento íntimo en una expansión: vuelve a sentirse vivo, y desde esa vida recuperada puede regresar al amor.'
+      ]
+    },
+    {
+      number: 11,
+      title: 'Until I Found You',
+      artist: 'Stephen Sanchez feat. Em Beihold',
+      narration: [
+        'Ahora ambos pueden hablarse directamente.',
+        'Él reconoce sus temores y la posibilidad de haber apartado aquello que más deseaba. Ella responde y demuestra que no es solamente alguien encontrada, sino alguien que también recuerda, desea y elige. Después de cantar durante tanto tiempo hacia figuras desconocidas, finalmente comprenden que estaban buscándose mutuamente.'
+      ]
+    },
+    {
+      number: 12,
+      title: 'Beautiful Things',
+      artist: 'Benson Boone',
+      narration: [
+        'Encontrar algo real también significa descubrir que puede perderse.',
+        'La felicidad despierta en él un miedo antiguo: cuanto más valioso se vuelve el vínculo, más difícil resulta confiar en su permanencia. Esta vez, sin embargo, no intenta destruirse para evitar la pérdida. Se permite reconocer el temor y mostrarlo como lo que es: una herida que todavía está aprendiendo a sanar.'
+      ]
+    },
+    {
+      number: 13,
+      title: 'Loving Is Easy',
+      artist: 'Rex Orange County feat. Benny Sings',
+      narration: [
+        'Después de vivir tanto tiempo preparado para el desastre, descubre que no todos los momentos de amor necesitan convertirse en una prueba.',
+        'A veces amar consiste simplemente en disfrutar la compañía, reír, conversar y permitir que las cosas sean sencillas. La tranquilidad no significa que el sentimiento sea menos profundo. Para él, aprender a no sufrir constantemente también es una forma de crecimiento.'
+      ]
+    },
+    {
+      number: 14,
+      title: 'Because of You',
+      artist: 'Stephen Sanchez',
+      narration: [
+        'Cuando el miedo se calma, aparece la gratitud.',
+        'Él puede contemplarla sin convertirla en su única razón para existir y, aun así, reconocer cuánto ha cambiado su manera de mirar el mundo. Ella no reemplazó aquello que faltaba dentro de él; su presencia le permitió descubrir nuevos colores en una vida que continúa siendo suya.'
+      ]
+    },
+    {
+      number: 15,
+      title: 'Coisa boa é voltar pra casa',
+      artist: 'Victor Pradella',
+      narration: [
+        'Después de buscar, temer y aprender, llega el momento de regresar.',
+        'La casa ya no es solamente un lugar físico ni otra persona en quien refugiarse. Es también la capacidad de volver a uno mismo y encontrar allí un espacio que puede compartirse. Él comprende que amar no significa marcharse para siempre de su propia vida.'
+      ]
+    },
+    {
+      number: 16,
+      title: 'Rosa e Laranja',
+      artist: 'Mariana Froes',
+      narration: [
+        'Ahora es ella quien habla del refugio.',
+        'También ha encontrado paz en la relación, pero no porque haya dejado de ser quien era. Entre imágenes de mar, luna, amanecer y colores cálidos, ambos mundos empiezan a coexistir. El enamorado de la luna y la enamorada del sol se encuentran en un cielo rosa y naranja.'
+      ]
+    },
+    {
+      number: 17,
+      title: 'I Hear a Symphony',
+      artist: 'Cody Fry',
+      narration: [
+        'La historia no culmina cuando una persona completa a la otra, sino cuando ambas descubren lo que pueden crear sin dejar de ser diferentes.',
+        'Como los instrumentos de una orquesta, cada uno conserva su voz, sus silencios y su identidad. Él comprende finalmente que el amor no tiene que reducir su existencia: puede ampliarla hasta convertir una antigua melodía solitaria en una sinfonía.'
+      ]
+    },
+    {
+      number: 18,
+      title: 'As the World Caves In',
+      artist: 'Matt Maltese',
+      narration: [
+        'La historia ya ha terminado, pero queda una última fantasía.',
+        'Después de aprender a cuidarse, a confiar y a amar sin desaparecer, todavía sobrevive en él aquella parte excesiva que desearía permanecer junto a alguien incluso durante el fin del mundo. Ya no organiza su vida alrededor de esa fantasía, pero tampoco quiere perderla por completo.',
+        'Ha cambiado su manera de amar.',
+        'No ha dejado de ser un empedernido.'
+      ]
+    }
+  ];
+
+  const ACTS = [
+    { id: 'acto-i', label: 'ACTO I', title: 'Dos voces en la distancia', theme: 'moon', scenes: [1, 2, 3] },
+    { id: 'acto-ii', label: 'ACTO II', title: 'La sombra adquiere un rostro', theme: 'dawn', scenes: [4, 5, 6, 7, 8] },
+    { id: 'intermedio', label: 'INTERMEDIO', title: 'El momento de detenerse', theme: 'still', scenes: [9] },
+    { id: 'acto-iii', label: 'ACTO III', title: 'Volver a amar sin dejar de existir', theme: 'sunrise', scenes: [10, 11, 12, 13, 14] },
+    { id: 'acto-iv', label: 'ACTO IV', title: 'El regreso al hogar', theme: 'home', scenes: [15, 16, 17] },
+    { id: 'coda', label: 'CODA', title: 'Lo que permanece del romántico', theme: 'coda', scenes: [18] }
+  ];
+
+  const state = {
+    bootstrap: readBootstrap(),
+    videoMap: new Map(),
+    activeScene: null,
+    activePlayer: null,
+    activeSection: 'inicio',
+    ticking: false
+  };
+
+  const root = document.documentElement;
+  const progressBar = document.getElementById('progressBar');
+  const backToTop = document.getElementById('backToTop');
+  const chapterStatus = document.getElementById('chapterStatus');
+  const chapterCurrent = document.getElementById('chapterCurrent');
+  const menuToggle = document.getElementById('menuToggle');
+  const primaryNav = document.getElementById('primaryNav');
+
+  function readBootstrap() {
+    const node = document.getElementById('serverBootstrap');
+    if (!node) return {};
+
+    try {
+      return JSON.parse(node.textContent.trim() || '{}');
+    } catch (error) {
+      console.info('Vista local: se utilizará el manifiesto de respaldo.');
+      return {};
+    }
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function twoDigits(value) {
+    return Number(value) < 10 ? '0' + Number(value) : String(value);
+  }
+
+  function drivePreviewUrl(fileId) {
+    return 'https://drive.google.com/file/d/' + encodeURIComponent(fileId) + '/preview';
+  }
+
+  function driveViewUrl(fileId) {
+    return 'https://drive.google.com/file/d/' + encodeURIComponent(fileId) + '/view';
+  }
+
+  function hydrateVideoMap(videos) {
+    const usable = Array.isArray(videos) && videos.length ? videos : FALLBACK_VIDEOS;
+    state.videoMap = new Map(
+      usable.map(video => [Number(video.number), String(video.fileId)])
+    );
+  }
+
+  function renderActs() {
+    const mount = document.getElementById('actsMount');
+    mount.innerHTML = ACTS.map(act => `
+      <section class="act act--${escapeHtml(act.theme)}" id="${escapeHtml(act.id)}" data-theme="${escapeHtml(act.theme)}">
+        <div class="act__heading" data-reveal>
+          <p class="act__label">${escapeHtml(act.label)}</p>
+          <h2>${escapeHtml(act.title)}</h2>
+        </div>
+        <div class="act__scenes">
+          ${act.scenes.map(number => renderScene(SCENES[number - 1])).join('')}
+        </div>
+      </section>
+    `).join('');
+  }
+
+  function renderScene(scene) {
+    const number = twoDigits(scene.number);
+    return `
+      <article class="scene" id="escena-${number}" data-scene="${scene.number}" data-theme="${themeForScene(scene.number)}">
+        <div class="scene__inner">
+          <div class="scene__rail" aria-hidden="true">
+            <span class="scene__rail-current">${number}</span>
+            <span class="scene__rail-dot"></span>
+            <span class="scene__rail-total">18</span>
+          </div>
+
+          <div class="scene__copy">
+            <p class="scene__kicker">Escena ${number}</p>
+            <h3>${escapeHtml(scene.title)}</h3>
+            <p class="scene__artist">${escapeHtml(scene.artist)}</p>
+            <div class="scene__rule" aria-hidden="true"></div>
+            <div class="scene__narration">
+              ${scene.narration.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
+            </div>
+            <div class="scene__actions">
+              <button class="button button--primary" type="button" data-play-scene="${scene.number}">
+                Reproducir video <span aria-hidden="true">▶</span>
+              </button>
+              <button class="scene__next" type="button" data-next-scene="${scene.number === 18 ? 0 : scene.number + 1}">
+                ${scene.number === 18 ? 'Volver al comienzo' : 'Siguiente escena →'}
+              </button>
+            </div>
+          </div>
+
+          <div class="scene__media">
+            <div class="player" data-player="${scene.number}">
+              ${posterMarkup(scene)}
+            </div>
+            <div class="player__fallback">
+              <span>Reproducción voluntaria · Google Drive</span>
+              <a data-drive-fallback="${scene.number}" target="_blank" rel="noopener noreferrer">Abrir video en Drive ↗</a>
+            </div>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function themeForScene(number) {
+    const act = ACTS.find(item => item.scenes.includes(number));
+    return act ? act.theme : 'moon';
+  }
+
+  function posterMarkup(scene) {
+    return `
+      <div class="player__poster">
+        <span class="player__chapter">Movimiento ${twoDigits(scene.number)} de 18</span>
+        <strong class="player__title">${escapeHtml(scene.title)}</strong>
+        <button class="player__play" type="button" data-play-scene="${scene.number}" aria-label="Reproducir ${escapeHtml(scene.title)}">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.8v14.4c0 .8.9 1.3 1.6.8l10.2-7.2a1 1 0 0 0 0-1.6L8.6 4C7.9 3.5 7 4 7 4.8Z"/></svg>
+        </button>
+        <span class="player__hint">Pulsa para abrir el visor</span>
+      </div>
+    `;
+  }
+
+  function wireVideoLinks() {
+    document.querySelectorAll('[data-drive-fallback]').forEach(link => {
+      const number = Number(link.dataset.driveFallback);
+      const fileId = state.videoMap.get(number);
+      if (fileId) link.href = driveViewUrl(fileId);
+    });
+  }
+
+  function stopActivePlayer() {
+    if (!state.activePlayer || !state.activeScene) return;
+
+    const number = Number(state.activeScene.dataset.scene);
+    const scene = SCENES[number - 1];
+    state.activePlayer.innerHTML = posterMarkup(scene);
+    state.activeScene.classList.remove('is-playing');
+    state.activePlayer = null;
+    state.activeScene = null;
+  }
+
+  function playScene(number) {
+    const sceneData = SCENES[number - 1];
+    const sceneNode = document.getElementById(`escena-${twoDigits(number)}`);
+    const player = sceneNode ? sceneNode.querySelector('[data-player]') : null;
+    const fileId = state.videoMap.get(number);
+
+    if (!sceneData || !sceneNode || !player || !fileId) {
+      console.error(`No se encontró el video de la escena ${number}.`);
+      return;
+    }
+
+    if (state.activePlayer === player) return;
+    stopActivePlayer();
+
+    player.innerHTML = '<div class="player__loading"><span class="sr-only">Cargando visor de Drive</span></div>';
+
+    const iframe = document.createElement('iframe');
+    iframe.src = drivePreviewUrl(fileId);
+    iframe.title = `Google Drive: ${sceneData.title}`;
+    iframe.loading = 'eager';
+    iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+    iframe.allowFullscreen = true;
+
+    iframe.addEventListener('load', () => {
+      const loading = player.querySelector('.player__loading');
+      if (loading) loading.remove();
+    }, { once: true });
+
+    player.appendChild(iframe);
+    sceneNode.classList.add('is-playing');
+    state.activePlayer = player;
+    state.activeScene = sceneNode;
+  }
+
+  function scrollToScene(number) {
+    const target = number === 0
+      ? document.getElementById('inicio')
+      : document.getElementById(`escena-${twoDigits(number)}`);
+    if (target) {
+      target.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
+    }
+  }
+
+  function prefersReducedMotion() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function setupDelegatedActions() {
+    document.addEventListener('click', event => {
+      const play = event.target.closest('[data-play-scene]');
+      if (play) {
+        playScene(Number(play.dataset.playScene));
+        return;
+      }
+
+      const next = event.target.closest('[data-next-scene]');
+      if (next) {
+        scrollToScene(Number(next.dataset.nextScene));
+      }
+    });
+
+    backToTop.addEventListener('click', () => scrollToScene(0));
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stopActivePlayer();
+    });
+  }
+
+  function setupNavigation() {
+    menuToggle.addEventListener('click', () => {
+      const open = menuToggle.getAttribute('aria-expanded') !== 'true';
+      menuToggle.setAttribute('aria-expanded', String(open));
+      primaryNav.classList.toggle('is-open', open);
+      document.body.classList.toggle('menu-open', open);
+    });
+
+    primaryNav.addEventListener('click', event => {
+      if (!event.target.closest('a')) return;
+      menuToggle.setAttribute('aria-expanded', 'false');
+      primaryNav.classList.remove('is-open');
+      document.body.classList.remove('menu-open');
+    });
+
+    document.querySelectorAll('[data-playlist-link]').forEach(link => {
+      link.href = state.bootstrap.playlistUrl || PLAYLIST_URL;
+    });
+  }
+
+  function setupRevealObserver() {
+    const targets = document.querySelectorAll('[data-reveal], .scene');
+    if (!('IntersectionObserver' in window)) {
+      targets.forEach(target => target.classList.add('is-visible'));
+      return;
+    }
+
+    // La ocultación es progresiva: solo se activa cuando el sistema de reveal
+    // está listo. Así el contenido nunca queda invisible por un error parcial.
+    targets.forEach(target => {
+      const rect = target.getBoundingClientRect();
+      if (rect.top < window.innerHeight * .96 && rect.bottom > 0) {
+        target.classList.add('is-visible');
+      }
+    });
+    root.classList.add('reveal-ready');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+
+    targets.forEach(target => {
+      if (!target.classList.contains('is-visible')) observer.observe(target);
+    });
+
+    // Respaldo para navegadores/iframes que demoran el primer callback.
+    window.setTimeout(() => {
+      targets.forEach(target => {
+        const rect = target.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          target.classList.add('is-visible');
+        }
+      });
+    }, 900);
+  }
+
+  function setupThemeObserver() {
+    if (!('IntersectionObserver' in window)) return;
+
+    const sections = document.querySelectorAll('section[data-theme]');
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries
+        .filter(entry => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+
+      const section = visible.target;
+      state.activeSection = section.id;
+      document.body.dataset.theme = section.dataset.theme || 'moon';
+      updateActiveNavigation(section.id);
+    }, { threshold: [0.2, 0.42, 0.62], rootMargin: '-18% 0px -38% 0px' });
+
+    sections.forEach(section => observer.observe(section));
+  }
+
+  function setupSceneObserver() {
+    if (!('IntersectionObserver' in window)) return;
+
+    const scenes = document.querySelectorAll('.scene');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const number = Number(entry.target.dataset.scene);
+        chapterCurrent.textContent = twoDigits(number);
+        chapterStatus.classList.add('is-visible');
+      });
+    }, { threshold: .42 });
+
+    scenes.forEach(scene => observer.observe(scene));
+  }
+
+  function updateActiveNavigation(id) {
+    document.querySelectorAll('.nav a').forEach(link => {
+      link.classList.toggle('is-active', link.getAttribute('href') === `#${id}`);
+    });
+  }
+
+  function updateScrollEffects() {
+    state.ticking = false;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio = max > 0 ? window.scrollY / max : 0;
+    const clamped = Math.min(1, Math.max(0, ratio));
+
+    progressBar.style.width = `${clamped * 100}%`;
+    root.style.setProperty('--scroll-progress', clamped.toFixed(4));
+    root.style.setProperty('--parallax', `${Math.round((clamped - .5) * 46)}px`);
+    backToTop.classList.toggle('is-visible', window.scrollY > 900);
+
+    const viewportCenter = window.innerHeight * .5;
+    let closest = null;
+    let closestDistance = Infinity;
+
+    document.querySelectorAll('.scene').forEach(scene => {
+      const rect = scene.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+      const center = rect.top + rect.height * .5;
+      const distance = Math.abs(center - viewportCenter);
+      if (distance < closestDistance) {
+        closest = scene;
+        closestDistance = distance;
+      }
+    });
+
+    if (closest) {
+      const rect = closest.getBoundingClientRect();
+      const local = (window.innerHeight - rect.top) / (rect.height + window.innerHeight);
+      root.style.setProperty('--scene-progress', Math.min(1, Math.max(0, local)).toFixed(4));
+      chapterCurrent.textContent = twoDigits(Number(closest.dataset.scene));
+      chapterStatus.classList.add('is-visible');
+    } else if (['inicio', 'prologo', 'epilogo'].includes(state.activeSection)) {
+      chapterStatus.classList.remove('is-visible');
+    }
+  }
+
+  function requestScrollUpdate() {
+    if (state.ticking) return;
+    state.ticking = true;
+    window.requestAnimationFrame(updateScrollEffects);
+  }
+
+  function requestServerManifestIfNeeded() {
+    const hasBootstrapVideos = state.bootstrap.videos && state.bootstrap.videos.length;
+    const hasGoogleRunner = window.google && window.google.script && window.google.script.run;
+    if (hasBootstrapVideos || !hasGoogleRunner) return;
+
+    google.script.run
+      .withSuccessHandler(videos => {
+        if (!Array.isArray(videos) || !videos.length) return;
+        hydrateVideoMap(videos);
+        wireVideoLinks();
+      })
+      .withFailureHandler(error => {
+        console.warn('No se pudo actualizar el manifiesto de Drive.', error);
+      })
+      .getVideoManifest();
+  }
+
+  function restoreInitialHash() {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (!id) return;
+
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    window.requestAnimationFrame(() => {
+      target.scrollIntoView({ behavior: 'auto', block: 'start' });
+      requestScrollUpdate();
+    });
+  }
+
+  function initialize() {
+    hydrateVideoMap(state.bootstrap.videos);
+    renderActs();
+    wireVideoLinks();
+    setupNavigation();
+    setupDelegatedActions();
+    setupRevealObserver();
+    setupThemeObserver();
+    setupSceneObserver();
+    requestServerManifestIfNeeded();
+    restoreInitialHash();
+
+    window.addEventListener('scroll', requestScrollUpdate, { passive: true });
+    window.addEventListener('resize', requestScrollUpdate);
+    updateScrollEffects();
+  }
+
+  try {
+    initialize();
+  } catch (error) {
+    console.error('No se pudieron construir los actos de Empedernido.', error);
+    const mount = document.getElementById('actsMount');
+    if (mount) {
+      mount.innerHTML = `
+        <section class="runtime-error" role="alert">
+          <p>No se pudieron cargar los actos.</p>
+          <p>Actualiza la página. Si el problema continúa, revisa que Scripts.html esté completo y publicado en la última versión.</p>
+        </section>
+      `;
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
