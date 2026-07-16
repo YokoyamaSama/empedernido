@@ -122,9 +122,13 @@
     left: -15vw;
     top: 12vh;
     border-radius: 50%;
-    opacity: .14;
-    background: radial-gradient(circle at 68% 42%, rgba(196,216,244,.48), rgba(83,102,139,.12) 38%, transparent 70%);
-    filter: blur(10px);
+    opacity: .16;
+    background:
+      radial-gradient(circle at 66% 31%, rgba(31,40,60,.34) 0 3%, transparent 3.6%),
+      radial-gradient(circle at 72% 57%, rgba(28,37,56,.3) 0 5%, transparent 5.8%),
+      radial-gradient(circle at 54% 68%, rgba(220,232,248,.1) 0 4%, transparent 4.8%),
+      radial-gradient(circle at 63% 44%, rgba(214,228,247,.58), rgba(124,145,181,.3) 34%, rgba(50,63,91,.12) 57%, transparent 71%);
+    filter: drop-shadow(0 0 34px rgba(134,164,208,.14));
   }
   .ambient__sun {
     width: min(34vw, 500px);
@@ -132,9 +136,11 @@
     right: -12vw;
     top: 28vh;
     border-radius: 50%;
-    opacity: .1;
-    background: radial-gradient(circle, rgba(255,233,198,.7) 0 2%, rgba(214,129,76,.2) 20%, transparent 68%);
-    filter: blur(12px);
+    opacity: .13;
+    background:
+      radial-gradient(circle at 51% 49%, rgba(255,250,222,.98) 0 2.2%, rgba(255,205,119,.82) 2.6%, rgba(224,132,68,.32) 8%, rgba(201,98,54,.12) 19%, transparent 58%),
+      radial-gradient(circle, rgba(255,210,129,.18), transparent 68%);
+    filter: drop-shadow(0 0 28px rgba(224,132,68,.16));
   }
   .ambient__orbits {
     width: 62vw;
@@ -296,12 +302,27 @@
     top: 17%;
     border-radius: 50%;
     background:
-      radial-gradient(circle at 68% 48%, rgba(226,238,253,.92), rgba(139,164,202,.58) 28%, rgba(65,79,110,.25) 50%, transparent 70%);
-    filter: drop-shadow(0 0 34px rgba(134,164,208,.18));
-    opacity: .86;
+      radial-gradient(circle at 73% 30%, rgba(48,60,83,.62) 0 2.4%, rgba(194,211,235,.08) 2.8%, transparent 3.5%),
+      radial-gradient(circle at 79% 51%, rgba(39,50,73,.68) 0 4.5%, rgba(213,227,245,.08) 5%, transparent 6%),
+      radial-gradient(circle at 66% 67%, rgba(42,54,78,.54) 0 3.2%, transparent 4%),
+      radial-gradient(circle at 88% 63%, rgba(220,232,248,.14) 0 2.2%, transparent 3%),
+      radial-gradient(circle at 70% 45%, rgba(226,238,253,.96), rgba(148,171,207,.7) 26%, rgba(67,82,113,.36) 49%, transparent 70%);
+    filter: drop-shadow(0 0 22px rgba(134,164,208,.2)) drop-shadow(0 0 70px rgba(78,104,149,.1));
+    opacity: .9;
     -webkit-mask: radial-gradient(circle at 57% 46%, transparent 0 55%, #000 56%);
     mask: radial-gradient(circle at 57% 46%, transparent 0 55%, #000 56%);
     transform: translate3d(0, calc(var(--parallax) * .8), 0);
+  }
+  .hero__crescent::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+      linear-gradient(108deg, rgba(255,255,255,.12), transparent 34%, rgba(12,18,31,.2) 68%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='3' seed='8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)' opacity='.34'/%3E%3C/svg%3E");
+    background-blend-mode: soft-light;
+    opacity: .38;
   }
   .hero__solar-system {
     position: absolute;
@@ -314,13 +335,37 @@
   }
   .hero__solar-core {
     position: absolute;
-    width: 18px;
+    width: 24px;
     aspect-ratio: 1;
     left: 54%;
     top: 48%;
     border-radius: 50%;
-    background: #fff7de;
-    box-shadow: 0 0 22px 8px rgba(255,210,133,.65), 0 0 110px 38px rgba(211,123,69,.22);
+    background:
+      radial-gradient(circle at 38% 34%, #fffdf0 0 10%, #ffe6a8 28%, #f5b75b 62%, #d97a36 100%);
+    box-shadow:
+      0 0 12px 4px rgba(255,235,183,.74),
+      0 0 38px 15px rgba(255,190,94,.46),
+      0 0 120px 44px rgba(211,123,69,.22);
+    animation: solar-breathe 4.8s ease-in-out infinite alternate;
+  }
+  .hero__solar-core::before {
+    content: "";
+    position: absolute;
+    inset: -260%;
+    border-radius: 50%;
+    background: repeating-conic-gradient(from 12deg, rgba(255,209,129,.07) 0 2deg, transparent 3deg 11deg);
+    mask-image: radial-gradient(circle, transparent 0 12%, rgba(0,0,0,.65) 20%, transparent 67%);
+    opacity: .72;
+  }
+  .hero__solar-core::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    border-radius: inherit;
+    background:
+      radial-gradient(circle at 32% 62%, rgba(180,82,31,.28) 0 7%, transparent 9%),
+      radial-gradient(circle at 69% 35%, rgba(255,250,211,.4) 0 6%, transparent 8%);
+    mix-blend-mode: multiply;
   }
   .hero__orbit {
     position: absolute;
@@ -485,7 +530,40 @@
     padding: 130px var(--gutter) 100px;
   }
   .act--still { padding-bottom: 150px; }
-  .act--coda { background: linear-gradient(180deg, rgba(2,3,6,.2), rgba(0,0,0,.72)); }
+  .act--coda {
+    overflow: clip;
+    isolation: isolate;
+    padding-top: 180px;
+    background:
+      radial-gradient(ellipse at 72% 46%, rgba(201,134,145,.07), transparent 34%),
+      linear-gradient(180deg, rgba(2,3,6,.26), rgba(7,4,9,.72) 46%, rgba(0,0,0,.9));
+  }
+  .act--coda::before {
+    content: "";
+    position: absolute;
+    z-index: -2;
+    inset: 5% -12% 4%;
+    background:
+      radial-gradient(circle at 74% 38%, rgba(228,183,103,.16), transparent 8%),
+      radial-gradient(ellipse at 74% 40%, rgba(201,134,145,.13), transparent 27%),
+      radial-gradient(ellipse at 24% 66%, rgba(115,139,178,.1), transparent 30%);
+    filter: blur(34px);
+    opacity: .74;
+    animation: coda-drift 13s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  .act--coda::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    border-block: 1px solid rgba(228,183,103,.1);
+    background:
+      repeating-radial-gradient(circle at 74% 36%, transparent 0 92px, rgba(228,183,103,.045) 93px 94px),
+      linear-gradient(180deg, rgba(0,0,0,.35), transparent 13%, transparent 82%, rgba(0,0,0,.66));
+    mask-image: linear-gradient(180deg, transparent, black 12%, black 86%, transparent);
+    pointer-events: none;
+  }
   .act__heading {
     width: min(var(--max), 100%);
     margin: 0 auto 72px;
@@ -497,8 +575,70 @@
     border-bottom: 1px solid var(--line);
   }
   .act__heading h2 { font-size: clamp(2.8rem, 6vw, 6.2rem); }
-  .act--coda .act__heading h2 { color: rgba(244,239,232,.52); }
+  .act__note { display: none; }
+  .act--coda .act__heading {
+    max-width: 980px;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 18px;
+    margin-bottom: 118px;
+    padding-block: 48px 42px;
+    border-top: 1px solid rgba(228,183,103,.1);
+    border-bottom-color: rgba(228,183,103,.22);
+    text-align: center;
+  }
+  .act--coda .act__label { margin: 0; color: var(--rose); }
+  .act--coda .act__heading h2 {
+    color: rgba(244,239,232,.9);
+    font-size: clamp(4.6rem, 10vw, 10rem);
+    letter-spacing: -.055em;
+    text-shadow: 0 0 70px rgba(201,134,145,.12);
+  }
+  .act--coda .act__note {
+    display: block;
+    margin: 4px 0 0;
+    color: rgba(214,207,199,.58);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(.92rem, 1.3vw, 1.08rem);
+    font-style: italic;
+    letter-spacing: .04em;
+  }
   .act__scenes { width: min(var(--max), 100%); margin: auto; }
+
+  .act--coda .scene { min-height: auto; padding-block: 30px 170px; }
+  .act--coda .scene__inner {
+    position: relative;
+    top: auto;
+    min-height: 0;
+    align-items: start;
+  }
+  .act--coda .scene__media { position: sticky; top: 116px; }
+  .act--coda .scene__copy { padding-top: 0; opacity: 1; transform: none; }
+  .act--coda .scene__kicker { color: rgba(201,134,145,.72); }
+  .act--coda .scene__rule { background: linear-gradient(90deg, var(--rose), transparent); opacity: .68; }
+  .act--coda .scene__narration {
+    max-width: 590px;
+    color: rgba(231,225,217,.86);
+    font-size: clamp(1.04rem, 1.5vw, 1.25rem);
+    line-height: 1.82;
+  }
+  .act--coda .scene__narration p { margin-bottom: 1.3em; }
+  .act--coda .scene__narration p:nth-child(1),
+  .act--coda .scene__narration p:nth-child(3),
+  .act--coda .scene__narration p:nth-child(6),
+  .act--coda .scene__narration p:nth-child(8),
+  .act--coda .scene__narration p:nth-child(9),
+  .act--coda .scene__narration p:nth-child(10) {
+    color: var(--text);
+    font-size: 1.08em;
+    font-style: italic;
+  }
+  .act--coda .scene__narration p:last-child {
+    margin-top: 2.1em;
+    color: var(--gold-light);
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    letter-spacing: .03em;
+  }
 
   .runtime-error {
     width: min(760px, calc(100% - 40px));
@@ -745,7 +885,18 @@
 
   /* Mantiene completa la composición editorial en portátiles de poca altura. */
   @media (min-width: 1000px) and (max-height: 800px) {
-    .scene__inner { top: 72px; min-height: calc(100svh - 82px); }
+    .scene { min-height: auto; }
+    .scene__inner {
+      position: relative;
+      top: auto;
+      min-height: auto;
+      align-items: start;
+    }
+    .scene__rail,
+    .scene__media {
+      position: sticky;
+      top: 96px;
+    }
     .scene__rail { height: min(67vh, 510px); }
     .scene__copy { padding-block: 8px; }
     .scene h3 { font-size: clamp(2.7rem, 4.7vw, 4.8rem); }
@@ -870,6 +1021,14 @@
   }
   @keyframes cue { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(7px); } }
   @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes solar-breathe {
+    from { transform: scale(.96); filter: brightness(.96); }
+    to { transform: scale(1.05); filter: brightness(1.08); }
+  }
+  @keyframes coda-drift {
+    from { transform: translate3d(-1.5%, 0, 0) scale(1); }
+    to { transform: translate3d(1.5%, -1.5%, 0) scale(1.04); }
+  }
 
   @media (max-width: 1100px) {
     .nav a { padding-inline: 7px; font-size: .74rem; }
@@ -926,6 +1085,8 @@
     .scene__rail { grid-row: 1 / span 2; height: 100%; min-height: 500px; }
     .scene__copy { padding-top: 0; }
     .scene__media { grid-column: 2; width: 100%; }
+    .act--coda .scene__media { position: relative; top: auto; }
+    .act--coda .act__heading { margin-bottom: 72px; }
     .scene h3 { font-size: clamp(2.8rem, 9vw, 5.3rem); }
     .epilogue { grid-template-columns: 1fr; }
     .epilogue__actions { grid-column: 1; }
@@ -948,6 +1109,13 @@
     .act { padding-block: 100px 70px; }
     .act__heading { margin-bottom: 30px; }
     .act__heading h2 { font-size: clamp(2.7rem, 14vw, 4.4rem); }
+    .act--coda { padding-top: 120px; }
+    .act--coda .act__heading { width: 100%; min-width: 0; margin-bottom: 54px; padding-block: 34px; }
+    .act--coda .act__heading h2,
+    .act--coda .act__note { max-width: 100%; min-width: 0; }
+    .act--coda .act__heading h2 { font-size: clamp(3.15rem, 15vw, 4.6rem); }
+    .act--coda .act__note { line-height: 1.55; }
+    .act--coda .scene { padding-block: 40px 110px; }
     .scene { padding-block: 70px; }
     .scene__inner { grid-template-columns: 1fr; gap: 28px; }
     .scene__rail {
@@ -1077,7 +1245,7 @@
           <p>Una empedernida… una tonta enamorada del sol.</p>
         </blockquote>
         <div class="prologue__copy" data-reveal>
-          <p>Él ya conoció el amor, pero también lo que ocurre cuando se entrega tanto que deja de reconocerse. Aun así, se resiste a convertirse en alguien indiferente. Sigue deseando amar con toda su intensidad, aunque una parte de él tema que toda historia nueva esté destinada a terminar como la anterior.</p>
+          <p>Él ya conoció el amor y también conoció la extraña tristeza de entregarse tanto que un día dejó de reconocerse. Aun así, su corazón se resiste a volverse indiferente. Todavía desea amar con toda su intensidad, aunque la memoria le recuerde cuánto puede doler perderse dentro de otra persona.</p>
           <p>En algún lugar, sin que él lo sepa, alguien más también espera.</p>
         </div>
       </div>
@@ -1092,13 +1260,14 @@
         <h2>La sinfonía permanece</h2>
       </div>
       <div class="epilogue__copy" data-reveal>
-        <p>Él comenzó contemplando el amor desde afuera, convencido de que su intensidad podía ser al mismo tiempo su mayor virtud y su condena. Ella comenzó escribiéndole a una persona inexistente, sin saber cuándo aparecería.</p>
-        <p>Cuando se encontraron, ambos confundieron durante un instante la cercanía con la posibilidad de bastarse por completo. Fue necesario detenerse, recuperar sus propias voces y comprender que una relación no se sostiene mediante la desaparición de quienes la forman.</p>
-        <p class="epilogue__line">Al final, él no aprende a amar menos.</p>
-        <p class="epilogue__line">Aprende a no ofrecerse como sacrificio.</p>
-        <p class="epilogue__line">Ella no llega para salvarlo.</p>
-        <p class="epilogue__line">Llega para caminar junto a alguien que ha decidido permanecer también consigo mismo.</p>
-        <p>Y cuando sus voces finalmente pueden convivir sin confundirse, aquello que comenzó como una canción solitaria se transforma en una sinfonía.</p>
+        <p>Él comenzó contemplando el amor desde afuera, deseando sentir aquello que solo conocía a través de otras personas. Ella comenzó escribiéndole a un desconocido, sin saber que sus palabras ya caminaban hacia alguien.</p>
+        <p>Cuando se encontraron, la cercanía llegó a parecerles un mundo suficiente. Tuvieron que detenerse, recuperar sus propias voces y aprender a permanecer juntos sin desaparecer dentro del otro.</p>
+        <p class="epilogue__line">Al final, él no aprendió a amar menos.</p>
+        <p class="epilogue__line">Aprendió a entregarse sin abandonarse.</p>
+        <p class="epilogue__line">Ella no llegó para salvarlo.</p>
+        <p class="epilogue__line">Llegó para caminar junto a alguien que también había decidido permanecer consigo mismo.</p>
+        <p>Sus voces pueden encontrarse, separarse y volver a reunirse. Cada una conserva su tono y, cuando suenan juntas, aquella antigua canción solitaria se vuelve más amplia, más profunda, más viva.</p>
+        <p class="epilogue__line">La sinfonía permanece.</p>
       </div>
       <div class="epilogue__actions" data-reveal>
         <a class="quiet-link" data-playlist-link target="_blank" rel="noopener noreferrer">Ver playlist completa en YouTube ↗</a>
@@ -1106,11 +1275,6 @@
       </div>
     </section>
   </main>
-
-  <footer>
-    <p>Una obra en dieciocho movimientos. Reproducción voluntaria desde Google Drive.</p>
-    <p class="footer__note">Si un video no puede mostrarse en el visor, utiliza su enlace alternativo de Drive.</p>
-  </footer>
 
   <div class="chapter-status" id="chapterStatus" aria-hidden="true">
     <span id="chapterCurrent">01</span><span>/</span><span>18</span>
@@ -1154,7 +1318,7 @@
       title: 'People Watching',
       artist: 'Conan Gray',
       narration: [
-        'Hay quienes aprenden sobre el amor viviéndolo y quienes, durante un tiempo, solamente pueden contemplarlo desde afuera. Él observa a otras parejas e intenta imaginar cómo se siente pertenecer a ese pequeño mundo que construyen entre dos. Desea acercarse, pero todavía existe en él una distancia protectora: mirar es más seguro que volver a arriesgarse.'
+        'Hay quienes aprenden sobre el amor viviéndolo y quienes, durante un tiempo, solamente pueden contemplarlo desde afuera. Él observa a otras parejas e intenta imaginar cómo se siente habitar ese pequeño mundo que dos personas construyen cuando se eligen. Desea enamorarse. Desea amar y sentirse amado. Pero una duda todavía camina junto a él. El corazón quiere acercarse mientras la memoria le recuerda lo que alguna vez dolió.'
       ]
     },
     {
@@ -1162,7 +1326,8 @@
       title: 'Dear Soulmate',
       artist: 'Laufey',
       narration: [
-        'En otro lugar, una mujer escribe para alguien a quien todavía no conoce. No sabe su nombre, su rostro ni cuánto falta para encontrarlo; solamente siente que hay palabras y afectos que algún día querrá entregarle. Mientras él contempla el amor desde lejos, ella también habla hacia el vacío, sin saber que quizá ya está respondiendo a su deseo.'
+        'En otro lugar, una mujer escribe para alguien a quien todavía no conoce. Ignora su nombre, su rostro y la distancia que aún los separa. Tampoco sabe en qué ciudad respira ni cuántos días faltan para encontrarlo. Solamente siente que guarda palabras, canciones y pequeños afectos que algún día deseará entregarle.',
+        'Mientras él contempla el amor desde lejos, ella habla hacia una ausencia. Ninguno puede escuchar al otro y, aun así, sus deseos comienzan a encontrarse en medio del silencio.'
       ]
     },
     {
@@ -1170,7 +1335,9 @@
       title: 'The Most Beautiful Thing',
       artist: 'Bruno Major',
       narration: [
-        'Él se pregunta si la persona que busca realmente existe o si el mundo puede mantener separados para siempre a quienes habrían podido amarse. La esperanza empieza a mezclarse con el miedo: no solamente teme no encontrarla, sino encontrar algo hermoso y volver a perderlo. Todavía no sabe que, en alguna parte, alguien también está preguntándose por él.'
+        'Él se pregunta dónde ocurrirá el encuentro. Tal vez en una calle cualquiera, al cruzar una puerta o al levantar la mirada en medio de un día común. Quizá ella ya pasó cerca sin que ninguno supiera reconocer al otro.',
+        'La esperanza lo acompaña, pero también el miedo. Teme que la persona que busca jamás aparezca. Teme encontrar algo hermoso y volver a perderlo.',
+        'Todavía ignora que, en alguna parte, alguien también se pregunta cuándo llegará él.'
       ]
     },
     {
@@ -1179,7 +1346,10 @@
       artist: 'TIAGO IORC',
       narration: [
         'Entonces aparece alguien.',
-        'No existe todavía una historia ni una promesa. Solamente una presencia que interrumpe sus pensamientos y lo obliga a permanecer en el presente. Por un instante, él deja de preguntarse cómo será el amor y se limita a contemplar a la mujer que tiene delante.'
+        'Aún no hay una historia entre ellos. Tampoco existen promesas ni recuerdos compartidos. Solamente una presencia que interrumpe sus pensamientos y lo devuelve al instante que está viviendo.',
+        'Hay algo en su rostro, en su manera de mirar y en la calma de sus gestos que vuelve pequeño todo lo demás.',
+        'Por primera vez, él deja de imaginar cómo será el amor.',
+        'Ahora solamente puede contemplarla.'
       ]
     },
     {
@@ -1187,8 +1357,11 @@
       title: 'Trevo (Tu)',
       artist: 'ANAVITÓRIA',
       narration: [
-        'Ella también comienza a verlo.',
-        'Lo que para él fue una aparición, para ella empieza a sentirse como una coincidencia afortunada: alguien raro, pero cercano; extraordinario, pero capaz de volver hermosa la vida cotidiana. La posibilidad del amor deja de existir solamente en la imaginación de él. Por primera vez, parece haber una respuesta.'
+        'Y ella también comienza a verlo.',
+        'Le parece extraño de una manera hermosa. Hay algo en él que se siente raro y cercano al mismo tiempo, como una conversación que llega sin esfuerzo o una mañana tranquila que uno quisiera prolongar.',
+        'Su presencia tiene la forma de una pequeña fortuna. De esas que aparecen pocas veces y vuelven especial lo cotidiano.',
+        'La posibilidad del amor deja de vivir solamente en la imaginación de él.',
+        'Alguien ha comenzado a responder.'
       ]
     },
     {
@@ -1196,7 +1369,9 @@
       title: 'Moça',
       artist: 'Mariana Froes',
       narration: [
-        'Las miradas empiezan a convertirse en movimiento. Aparecen el baile, la cercanía, el deseo de quedarse un poco más y la pequeña tristeza que provoca cada despedida. El amor abandona el terreno de las ideas y entra en el cuerpo: ya no es solamente alguien a quien imaginar, sino alguien cuya presencia puede sentirse.'
+        'Las miradas aprenden a acercarse. Aparecen el baile, las conversaciones que se alargan y el deseo de quedarse unos minutos más. Cada despedida deja una tristeza pequeña, como si la ausencia comenzara antes de que alguno se marche.',
+        'El amor abandona lentamente el lugar de las ideas y entra en el cuerpo.',
+        'Ahora tiene una voz que puede escucharse, unas manos que pueden rozarse y una presencia cuya falta ya empieza a sentirse.'
       ]
     },
     {
@@ -1204,8 +1379,9 @@
       title: 'Bewitched',
       artist: 'Laufey',
       narration: [
-        'Ella descubre que tampoco permanece intacta.',
-        'Hay algo en él que altera su percepción, vuelve importantes los gestos más pequeños y la hace avanzar entre fascinación y desconcierto. Aquella mujer que escribía a un desconocido empieza a sospechar que tal vez el destinatario de sus palabras se encuentra ahora frente a ella.'
+        'Ella descubre que tampoco ha permanecido intacta.',
+        'Algo en él altera el ritmo de sus días. Los gestos más pequeños adquieren una importancia inesperada y cada encuentro parece rodeado por una luz distinta. Se siente atraída, confundida y feliz dentro de un sentimiento que todavía no sabe nombrar por completo.',
+        'La mujer que antes escribía para un desconocido comienza a sospechar que aquellas palabras quizá siempre estuvieron buscando al hombre que ahora tiene delante.'
       ]
     },
     {
@@ -1213,7 +1389,10 @@
       title: 'All I Need',
       artist: 'Jacob Collier, Mahalia y Ty Dolla $ign',
       narration: [
-        'Las dos voces finalmente parecen habitar el mismo espacio. El encuentro se convierte en celebración, y durante unos minutos ambos sienten que nada fuera de ellos resulta necesario. Es la felicidad del enamoramiento en su forma más luminosa, pero también el comienzo de un peligro silencioso: confundir la unión con la desaparición de todo lo demás.'
+        'Las dos voces finalmente habitan el mismo espacio.',
+        'El encuentro se vuelve música, movimiento y celebración. Cuando están juntos, todo parece más vivo. La alegría circula entre ellos con tanta facilidad que, durante un instante, el resto del mundo se vuelve lejano.',
+        'Ambos sienten que aquella cercanía podría bastarles para siempre.',
+        'Es el enamoramiento en su momento más luminoso. También es el comienzo de una confusión silenciosa. Poco a poco, la felicidad de compartir la vida empieza a parecerse al deseo de olvidar todo lo que existe fuera de ellos.'
       ]
     },
     {
@@ -1221,8 +1400,11 @@
       title: 'Note to Self',
       artist: 'Ben Rector',
       narration: [
-        'En medio de la euforia, él se queda a solas consigo mismo.',
-        'No quiere huir del amor ni negar lo que siente. Solamente necesita recordar que todavía posee un cuerpo, una vida, amigos, responsabilidades y una identidad que no deben desaparecer dentro de la relación. Amarla no exige volver a abandonarse.'
+        'En medio de la euforia, él vuelve a quedarse a solas consigo mismo.',
+        'Escribe pequeños recordatorios. Cuidar su cuerpo. Ordenar su casa. Llamar a su madre. Escuchar a sus amigos. Cumplir las promesas que se ha hecho. Pensar un poco menos en sus temores y un poco más en las personas que ama.',
+        'También escribe que desea seguir eligiéndola.',
+        'Y que necesita seguir eligiéndose.',
+        'Amarla puede formar parte de su vida sin ocupar cada rincón. Para permanecer junto a ella, primero debe recordar quién desea ser cuando nadie más lo está mirando.'
       ]
     },
     {
@@ -1230,8 +1412,10 @@
       title: 'Brand New',
       artist: 'Ben Rector with Cody Fry and the National Symphony Orchestra',
       narration: [
-        'Después del silencio interior, el mundo vuelve a abrirse.',
-        'Él no renace porque otra persona lo haya completado, sino porque ha recuperado el lugar que ocupa dentro de su propia vida. La orquesta transforma ese descubrimiento íntimo en una expansión: vuelve a sentirse vivo, y desde esa vida recuperada puede regresar al amor.'
+        'Después de aquel silencio, el mundo vuelve a abrirse.',
+        'La luz entra de otra manera. Las calles recuperan movimiento y las cosas sencillas parecen nuevas. Él vuelve a reír, a respirar con calma y a reconocerse dentro de sus propios días.',
+        'Algo ha cambiado.',
+        'Ha recuperado el lugar que ocupa en su vida y desde allí puede acercarse nuevamente al amor. La música crece a su alrededor como si una pequeña certeza interior necesitara de toda una orquesta para hacerse visible.'
       ]
     },
     {
@@ -1239,8 +1423,11 @@
       title: 'Until I Found You',
       artist: 'Stephen Sanchez feat. Em Beihold',
       narration: [
-        'Ahora ambos pueden hablarse directamente.',
-        'Él reconoce sus temores y la posibilidad de haber apartado aquello que más deseaba. Ella responde y demuestra que no es solamente alguien encontrada, sino alguien que también recuerda, desea y elige. Después de cantar durante tanto tiempo hacia figuras desconocidas, finalmente comprenden que estaban buscándose mutuamente.'
+        'Ahora ambos pueden hablarse sin dirigir sus palabras hacia figuras imaginadas.',
+        'Él comprende que el miedo lo llevó a apartar aquello que más deseaba. Durante mucho tiempo creyó que debía protegerse incluso de la persona que amaba. Ella responde con su propia voz y le recuerda que también ha esperado, dudado y elegido.',
+        'Después de tantas canciones lanzadas hacia la distancia, finalmente pueden reconocerse.',
+        'Él la encontró.',
+        'Ella también lo encontró a él.'
       ]
     },
     {
@@ -1248,8 +1435,10 @@
       title: 'Beautiful Things',
       artist: 'Benson Boone',
       narration: [
-        'Encontrar algo real también significa descubrir que puede perderse.',
-        'La felicidad despierta en él un miedo antiguo: cuanto más valioso se vuelve el vínculo, más difícil resulta confiar en su permanencia. Esta vez, sin embargo, no intenta destruirse para evitar la pérdida. Se permite reconocer el temor y mostrarlo como lo que es: una herida que todavía está aprendiendo a sanar.'
+        'Encontrar algo hermoso despierta una nueva clase de miedo.',
+        'Cuanto más feliz se siente, más difícil resulta ignorar que todo lo amado puede perderse. La gratitud y el temor crecen juntos dentro de él. Mira la vida que ahora posee y le pide al cielo que le permita conservarla un poco más.',
+        'Esta vez comparte su miedo en lugar de esconderlo. Lo deja salir con su propia voz y permite que ella lo conozca.',
+        'La herida sigue allí, pero ya no decide por él.'
       ]
     },
     {
@@ -1257,8 +1446,10 @@
       title: 'Loving Is Easy',
       artist: 'Rex Orange County feat. Benny Sings',
       narration: [
-        'Después de vivir tanto tiempo preparado para el desastre, descubre que no todos los momentos de amor necesitan convertirse en una prueba.',
-        'A veces amar consiste simplemente en disfrutar la compañía, reír, conversar y permitir que las cosas sean sencillas. La tranquilidad no significa que el sentimiento sea menos profundo. Para él, aprender a no sufrir constantemente también es una forma de crecimiento.'
+        'Después de vivir tanto tiempo esperando que algo saliera mal, descubre que el amor también puede sentirse ligero.',
+        'A veces basta con conversar, reír, caminar juntos o compartir el silencio. No todos los días necesitan una prueba ni cada gesto debe esconder un significado doloroso.',
+        'Ella puede ser exactamente quien es. Él también.',
+        'La calma no disminuye la profundidad de lo que sienten. Le permite descubrir que la ternura puede llegar a tiempo y que amar, en ciertos días, puede ser sencillo.'
       ]
     },
     {
@@ -1266,8 +1457,11 @@
       title: 'Because of You',
       artist: 'Stephen Sanchez',
       narration: [
-        'Cuando el miedo se calma, aparece la gratitud.',
-        'Él puede contemplarla sin convertirla en su única razón para existir y, aun así, reconocer cuánto ha cambiado su manera de mirar el mundo. Ella no reemplazó aquello que faltaba dentro de él; su presencia le permitió descubrir nuevos colores en una vida que continúa siendo suya.'
+        'Cuando el miedo se aquieta, aparece la gratitud.',
+        'Él contempla sus ojos, su cabello, la amplitud de su corazón y la manera en que su presencia devuelve color a ciertos lugares que antes parecían grises.',
+        'Junto a ella se siente más cercano al hombre que desea ser. Su vida continúa perteneciéndole, pero ahora contiene paisajes que solo pudo descubrir cuando comenzaron a caminar juntos.',
+        'Ella no escribe su identidad por él.',
+        'Su cariño le permite mirarla con mayor claridad.'
       ]
     },
     {
@@ -1276,7 +1470,9 @@
       artist: 'Victor Pradella',
       narration: [
         'Después de buscar, temer y aprender, llega el momento de regresar.',
-        'La casa ya no es solamente un lugar físico ni otra persona en quien refugiarse. Es también la capacidad de volver a uno mismo y encontrar allí un espacio que puede compartirse. Él comprende que amar no significa marcharse para siempre de su propia vida.'
+        'La ventana se abre. La luz entra y encuentra un lugar que ya no parece vacío. Volver a casa se convierte en una forma de respirar, descansar y reconocer todo aquello que ha permanecido mientras él intentaba encontrarse.',
+        'La casa vive dentro de sí mismo y también en el espacio que ambos han aprendido a compartir.',
+        'Ahora puede volver a ella sin marcharse de su propia vida.'
       ]
     },
     {
@@ -1284,8 +1480,10 @@
       title: 'Rosa e Laranja',
       artist: 'Mariana Froes',
       narration: [
-        'Ahora es ella quien habla del refugio.',
-        'También ha encontrado paz en la relación, pero no porque haya dejado de ser quien era. Entre imágenes de mar, luna, amanecer y colores cálidos, ambos mundos empiezan a coexistir. El enamorado de la luna y la enamorada del sol se encuentran en un cielo rosa y naranja.'
+        'Ahora es ella quien contempla el refugio que han construido.',
+        'El mar recibe la tarde en tonos de rosa y naranja. La luna aparece antes de que el sol termine de marcharse y, por un instante, ambas luces comparten el mismo cielo.',
+        'Ella también ha encontrado calma. Conserva su voz, sus deseos y la manera particular en que mira el mundo. Desde allí puede acercarse a él y ofrecerle compañía.',
+        'El enamorado de la luna y la enamorada del sol finalmente comprenden que sus luces pueden tocarse sin apagarse.'
       ]
     },
     {
@@ -1293,8 +1491,11 @@
       title: 'I Hear a Symphony',
       artist: 'Cody Fry',
       narration: [
-        'La historia no culmina cuando una persona completa a la otra, sino cuando ambas descubren lo que pueden crear sin dejar de ser diferentes.',
-        'Como los instrumentos de una orquesta, cada uno conserva su voz, sus silencios y su identidad. Él comprende finalmente que el amor no tiene que reducir su existencia: puede ampliarla hasta convertir una antigua melodía solitaria en una sinfonía.'
+        'Lo que alguna vez fue una melodía solitaria comienza a llenarse de nuevas voces.',
+        'Cada uno conserva sus silencios, sus cambios de ritmo y aquellas pequeñas diferencias que a veces producen desorden. Con el tiempo comprenden que incluso la disonancia puede formar parte de algo hermoso.',
+        'El amor crece y se vuelve más complejo. También se vuelve más profundo.',
+        'Él ya puede escucharla sin dejar de escuchar su propia voz. Ella puede caminar a su lado sin perder la dirección de sus pasos.',
+        'Juntos convierten aquella antigua canción solitaria en una sinfonía.'
       ]
     },
     {
@@ -1302,10 +1503,16 @@
       title: 'As the World Caves In',
       artist: 'Matt Maltese',
       narration: [
-        'La historia ya ha terminado, pero queda una última fantasía.',
-        'Después de aprender a cuidarse, a confiar y a amar sin desaparecer, todavía sobrevive en él aquella parte excesiva que desearía permanecer junto a alguien incluso durante el fin del mundo. Ya no organiza su vida alrededor de esa fantasía, pero tampoco quiere perderla por completo.',
-        'Ha cambiado su manera de amar.',
-        'No ha dejado de ser un empedernido.'
+        'El mundo termina.',
+        'El cielo se deshace sobre sus cabezas, las ciudades apagan su último latido… y él no corre.',
+        'La busca.',
+        'No para esconderse dentro de ella ni para pedirle que lo salve. La busca con su nombre todavía en los labios, con su voz intacta, con el corazón abierto y los pies firmes sobre su propia tierra.',
+        'Ha aprendido que amar no es desaparecer. Que dos fuegos pueden acercarse sin devorarse y que dos cuerpos pueden bailar bajo la misma noche sin perder su sombra.',
+        'Y aun así…',
+        'Si todo estuviera por acabarse, tomaría su mano. La miraría como se mira la última luz. Bailaría con ella entre las ruinas, absurdo, tierno, enamorado… como si un abrazo pudiera sostener el cielo durante un instante más.',
+        'Porque ha cambiado, sí.',
+        'Pero no ha aprendido a amar a medias.',
+        'Empedernido.'
       ]
     }
   ];
@@ -1316,7 +1523,7 @@
     { id: 'intermedio', label: 'INTERMEDIO', title: 'El momento de detenerse', theme: 'still', scenes: [9] },
     { id: 'acto-iii', label: 'ACTO III', title: 'Volver a amar sin dejar de existir', theme: 'sunrise', scenes: [10, 11, 12, 13, 14] },
     { id: 'acto-iv', label: 'ACTO IV', title: 'El regreso al hogar', theme: 'home', scenes: [15, 16, 17] },
-    { id: 'coda', label: 'CODA', title: 'Lo que permanece del romántico', theme: 'coda', scenes: [18] }
+    { id: 'coda', label: 'CODA', title: 'Empedernido', note: 'Una última ensoñación, después del desenlace', theme: 'coda', scenes: [18] }
   ];
 
   const state = {
@@ -1383,12 +1590,18 @@
         <div class="act__heading" data-reveal>
           <p class="act__label">${escapeHtml(act.label)}</p>
           <h2>${escapeHtml(act.title)}</h2>
+          ${actNoteMarkup(act)}
         </div>
         <div class="act__scenes">
           ${act.scenes.map(number => renderScene(SCENES[number - 1])).join('')}
         </div>
       </section>
     `).join('');
+  }
+
+  function actNoteMarkup(act) {
+    if (!act.note) return '';
+    return '<p class="act__note">' + escapeHtml(act.note) + '</p>';
   }
 
   function renderScene(scene) {
@@ -1423,10 +1636,6 @@
           <div class="scene__media">
             <div class="player" data-player="${scene.number}">
               ${posterMarkup(scene)}
-            </div>
-            <div class="player__fallback">
-              <span>Reproducción voluntaria · Google Drive</span>
-              <a data-drive-fallback="${scene.number}" target="_blank" rel="noopener noreferrer">Abrir video en Drive ↗</a>
             </div>
           </div>
         </div>
